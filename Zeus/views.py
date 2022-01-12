@@ -5,7 +5,7 @@ from .models import Event
 from .serializers import EventSerializer 
 from datetime import datetime
 
-class EventList(APIView):
+class EventInterval(APIView):
 
     def get(self, request, start_time_isoformat, end_time_isoformat):
         try:
