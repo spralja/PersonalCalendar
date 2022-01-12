@@ -4,6 +4,8 @@ from django import forms
 
 class EventManager(models.Manager):
     def interval(self, start_time, end_time):
+        if start_time >= end_time:
+            raise ValueError("start_time must be smaller than end_time")
         return self.filter(start_time__lte=end_time) & self.filter(end_time__gte=start_time)
 
 
