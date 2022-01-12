@@ -1,11 +1,23 @@
 from django.db import models
 from django import forms
+from datetime import datetime
 
 
 class EventManager(models.Manager):
-    def interval(self, start_time, end_time):
+    def interval(self, start_time=None, end_time=None):
+        if start_time is None and end_time is None:
+            return self.all()
+
+        if start_time is None:
+            qs = self.filter(start_time__lt=end_time)
+            return self.filter(start_time__lt=end_time)
+
+        if end_time is None:
+            return self.filter(end_time__gt=start_time)
+
         if start_time >= end_time:
             raise ValueError("start_time must be smaller than end_time")
+
         return self.filter(start_time__lt=end_time) & self.filter(end_time__gt=start_time)
 
 

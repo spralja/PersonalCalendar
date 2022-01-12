@@ -91,6 +91,60 @@ class EventManagerIntervalTestCase(TestCase):
         events = Event.objects.interval(start_time, end_time)
         self.assertEquals(len(events), 0)
 
+    def test__A_E1_E2(self):
+        start_time = self.E.start_time - self.E.duration()
+        events = Event.objects.interval(start_time=start_time)
+        self.assertEquals(len(events), 1)
+
+    def test__AE1_E2(self):
+        start_time = self.E.start_time
+        events = Event.objects.interval(start_time=start_time)
+        self.assertEquals(len(events), 1)
+
+    def test__E1_A_E2(self):
+        start_time = self.E.start_time + self.E.duration() / 2 
+        events = Event.objects.interval(start_time=start_time)
+        self.assertEquals(len(events), 1)
+
+    def test__E1_E2A(self):
+        start_time = self.E.end_time
+        events = Event.objects.interval(start_time=start_time)
+        self.assertEquals(len(events), 0)
+
+    def test__E1_E2_A(self):
+        start_time = self.E.end_time + self.E.duration()
+        events = Event.objects.interval(start_time=start_time)
+        self.assertEquals(len(events), 0)
+
+    def test__B_E1_E2(self):
+        end_time = self.E.start_time - self.E.duration()
+        events = Event.objects.interval(end_time=end_time)
+        self.assertEquals(len(events), 0)
+
+    def test__BE1_E2(self):
+        end_time = self.E.start_time
+        events = Event.objects.interval(end_time=end_time)
+        self.assertEquals(len(events), 0)
+
+    def test__E1_B_E2(self):
+        end_time = self.E.start_time + self.E.duration() / 2
+        events = Event.objects.interval(end_time=end_time)
+        self.assertEquals(len(events), 1)
+
+    def test__E1_E2B(self):
+        end_time = self.E.end_time
+        events = Event.objects.interval(end_time=end_time)
+        self.assertEquals(len(events), 1)
+
+    def test__E1_E2_B(self):
+        end_time = self.E.end_time + self.E.duration()
+        events = Event.objects.interval(end_time=end_time)
+        self.assertEquals(len(events), 1)
+
+    def test_E1_E2(self):
+        events = Event.objects.interval()
+        self.assertEquals(len(events), 1)
+    
     def test__AB(self):
         start_time = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
         end_time = start_time = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
