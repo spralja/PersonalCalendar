@@ -1,9 +1,11 @@
 from django.test import TestCase
 from .models import Event, EventManager
 from datetime import datetime, timezone, timedelta
+import icalendar
 
 
 UTC = timezone.utc
+
 
 
 class EventTestCase(TestCase):
@@ -171,7 +173,7 @@ class EventTestCase(TestCase):
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
         )
 
         events = Event.objects.all()
@@ -179,7 +181,6 @@ class EventTestCase(TestCase):
         self.assertEquals(events[1], F)
 
         events.delete()
-
 
 class EventManagerIntervalTestCase(TestCase):
     def setUp(self):
@@ -335,3 +336,9 @@ class EventManagerIntervalTestCase(TestCase):
         end_time = datetime(2022, 1, 12, 9, 0, tzinfo=UTC)
         with self.assertRaises(ValueError):
             events = Event.objects.interval(start_time, end_time)
+
+class EventManagerFromIcalendarCalEventTestCase(TestCase):
+    def test_throws_key_error(self):
+        event = icalendar.cal.Event()
+        with self.assertRaises(KeyError):
+            Event.objects.from_icalendar_cal_Event(event)
