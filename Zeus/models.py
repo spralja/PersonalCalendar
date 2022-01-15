@@ -12,11 +12,12 @@ class Calendar(models.Model):
 
 
 class EventManager(models.Manager):
-    def create(self, *args, **kwargs):
-        if kwargs.get('DTEND') <= kwargs.get('DTSTART'):
-            raise ValueError('DTEND cannot be less or equal to DTSTART') 
+    def create(self, **kwargs):
+        if kwargs.get('DTEND') is not None and kwargs.get('DTSTART') is not None:
+            if kwargs['DTEND'] <= kwargs['DTSTART']:
+                raise ValueError('DTEND cannot be less or equal to DTSTART') 
         
-        return super().create(*args, **kwargs)
+        return super().create(**kwargs)
 
     def interval(self, DTSTART=None, DTEND=None):
         if DTSTART is None and DTEND is None:
@@ -34,6 +35,12 @@ class EventManager(models.Manager):
 
         return self.filter(DTSTART__lt=DTEND) & self.filter(DTEND__gt=DTSTART)
 
+    def _add_from_ical_event_to_ical_event_dict(ical_event, ical_event_dict, *args):
+        for arg in args:
+            if ical_event.get(arg) is not None:
+                ical_event_dict[arg] = ical_event[arg].t
+
+
     def create_from_ical_event(self, ical_event, calendar):
         ical_event_dict = {}
         if ical_event.get('DTSTART') is not None:
@@ -42,8 +49,9 @@ class EventManager(models.Manager):
         if ical_event.get('DTEND') is not None:
             ical_event_dict['DTEND'] = ical_event['DTEND'].dt
 
-        if ical_event.get('SUMMARY') is not None:
-            ical_event_dict['SUMMARY'] = ical_event['SUMMARY']
+        _add_from_ical_event_to_ical_event_dict(ical_event, ical_event_dict,
+            'UID', 'SUMMARY', 'DESCRIPTION', 'LOCATION', 'DTSSTAMP',
+        )
 
         return self.create(calendar=calendar, **ical_event_dict)
 
@@ -51,9 +59,13 @@ class EventManager(models.Manager):
 class Event(models.Model):
     calendar = models.ForeignKey(to=Calendar, on_delete=models.CASCADE)
 
+    UID = models.TextField(primary_key=True)
     DTSTART = models.DateTimeField()
     DTEND = models.DateTimeField()
     SUMMARY = models.CharField(max_length=200)
+    DESCRIPTION = models.TextField(blank=True)
+    LOCATION = models.TextField(blank=True)
+    DTSSTAMP = models.DateTimeField()
 
     objects = EventManager()
 
@@ -69,4 +81,4 @@ class Event(models.Model):
             raise forms.ValidationError('DTEND cannot be less or equal to DTSTART')
 
     def __str__(self):
-        return self.name
+        return self.SUMMARY

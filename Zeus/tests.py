@@ -5,7 +5,7 @@ import icalendar
 
 
 UTC = timezone.utc
-
+DTSSTAMP = datetime.now()
 
 
 class EventTestCase(TestCase):
@@ -17,6 +17,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 9, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
             SUMMARY='Breakfast',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -35,6 +36,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -42,6 +44,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -56,6 +59,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -63,6 +67,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -77,6 +82,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -84,6 +90,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -98,6 +105,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -105,6 +113,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -119,6 +128,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -126,6 +136,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -144,6 +155,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -151,6 +163,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -165,6 +178,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -172,6 +186,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 21, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -186,6 +201,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             SUMMARY='Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -193,6 +209,7 @@ class EventTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
             SUMMARY='Second Dinner',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
@@ -215,6 +232,7 @@ class EventManagerTestCase(TestCase):
                 DTSTART=DTSTART,
                 DTEND=DTEND,
                 SUMMARY='dummy',
+                DTSSTAMP=DTSSTAMP,
                 calendar=self.CAL,
             )
 
@@ -228,6 +246,7 @@ class EventManagerTestCase(TestCase):
                 DTSTART=DTSTART,
                 DTEND=DTEND,
                 SUMMARY='dummy',
+                DTSSTAMP=DTSSTAMP,
                 cal=self.CAL,
             )
 
@@ -242,6 +261,7 @@ class EventManagerIntervalTestCase(TestCase):
             DTSTART=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
             DTEND=datetime(2022, 1, 12, 11, 0, tzinfo=UTC),
             SUMMARY='Second Breakfast',
+            DTSSTAMP=DTSSTAMP,
             calendar=self.CAL,
         )
 
