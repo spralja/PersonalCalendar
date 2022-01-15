@@ -2,6 +2,10 @@ from django.db import models
 from django import forms
 from datetime import datetime
 import icalendar
+from icalendar.tools import UIDGenerator
+from decouple import config
+
+UID_GENERATOR = UIDGenerator()
 
 
 class Calendar(models.Model):
@@ -13,45 +17,48 @@ class Calendar(models.Model):
 
 class EventManager(models.Manager):
     def create(self, **kwargs):
-        if kwargs.get('DTEND') is not None and kwargs.get('DTSTART') is not None:
-            if kwargs['DTEND'] <= kwargs['DTSTART']:
-                raise ValueError('DTEND cannot be less or equal to DTSTART') 
-        
+        if kwargs.get('uid') is None:
+            kwargs['uid'] = UID_GENERATOR.uid(config('DOMAIN_NAME'))
+
+        if kwargs.get('dtend') is not None and kwargs.get('dtstart') is not None:
+            if kwargs['dtend'] <= kwargs['dtstart']:
+                raise ValueError('dtend cannot be less or equal to dtstart') 
+
         return super().create(**kwargs)
 
-    def interval(self, DTSTART=None, DTEND=None):
-        if DTSTART is None and DTEND is None:
+    def interval(self, dtstart=None, dtend=None):
+        if dtstart is None and dtend is None:
             return self.all()
 
-        if DTSTART is None:
-            qs = self.filter(DTSTART__lt=DTEND)
-            return self.filter(DTSTART__lt=DTEND)
+        if dtstart is None:
+            qs = self.filter(dtstart__lt=dtend)
+            return self.filter(dtstart__lt=dtend)
 
-        if DTEND is None:
-            return self.filter(DTEND__gt=DTSTART)
+        if dtend is None:
+            return self.filter(dtend__gt=dtstart)
 
-        if DTSTART >= DTEND:
-            raise ValueError('DTEND cannot be less or equal to DTSTART')
+        if dtstart >= dtend:
+            raise ValueError('dtend cannot be less or equal to dtstart')
 
-        return self.filter(DTSTART__lt=DTEND) & self.filter(DTEND__gt=DTSTART)
+        return self.filter(dtstart__lt=dtend) & self.filter(dtend__gt=dtstart)
 
-    def _add_from_ical_event_to_ical_event_dict(ical_event, ical_event_dict, *args):
-        for arg in args:
-            if ical_event.get(arg) is not None:
-                ical_event_dict[arg] = ical_event[arg].t
-
-
-    def create_from_ical_event(self, ical_event, calendar):
+    @staticmethod
+    def _add_from_ical_event_to_ical_event_dict(ical_event):
         ical_event_dict = {}
-        if ical_event.get('DTSTART') is not None:
-            ical_event_dict['DTSTART'] = ical_event['DTSTART'].dt
+        fields = [field.name for field in Event._meta.get_fields()]
+        for field in fields:
+            ical_property = field.replace('_', '-')
+            if ical_event.get(ical_property) is not None:
+                if type(ical_event.get(ical_property)) is icalendar.prop.vDDDTypes:
+                    ical_event_dict[field] = ical_event[ical_property].dt
+                else:
+                    ical_event_dict[field] = ical_event[ical_property]
 
-        if ical_event.get('DTEND') is not None:
-            ical_event_dict['DTEND'] = ical_event['DTEND'].dt
+        return ical_event_dict
 
-        _add_from_ical_event_to_ical_event_dict(ical_event, ical_event_dict,
-            'UID', 'SUMMARY', 'DESCRIPTION', 'LOCATION', 'DTSSTAMP',
-        )
+    def create_from_ical_event(self, calendar, ical_event):
+        ical_event_dict = self._add_from_ical_event_to_ical_event_dict(ical_event)
+
 
         return self.create(calendar=calendar, **ical_event_dict)
 
@@ -59,26 +66,29 @@ class EventManager(models.Manager):
 class Event(models.Model):
     calendar = models.ForeignKey(to=Calendar, on_delete=models.CASCADE)
 
-    UID = models.TextField(primary_key=True)
-    DTSTART = models.DateTimeField()
-    DTEND = models.DateTimeField()
-    SUMMARY = models.CharField(max_length=200)
-    DESCRIPTION = models.TextField(blank=True)
-    LOCATION = models.TextField(blank=True)
-    DTSSTAMP = models.DateTimeField()
+    uid = models.TextField(primary_key=True)
+    dtstart = models.DateTimeField()
+    dtend = models.DateTimeField()
+    summary = models.TextField()
+    dtstamp = models.DateTimeField()
+
+    description = models.TextField(null=True)
+    location = models.TextField(null=True)
+    contact = models.TextField(null=True)
+    related_to = models.TextField(null=True)
 
     objects = EventManager()
 
     def duration(self):
-        return self.DTEND - self.DTSTART
+        return self.dtend - self.dtstart
 
     class Meta:
-        ordering = ['DTSTART']
+        ordering = ['dtstart']
 
     def clean(self):
         super().clean()
-        if self.DTEND <= self.DTSTART:
-            raise forms.ValidationError('DTEND cannot be less or equal to DTSTART')
+        if self.dtend <= self.dtstart:
+            raise forms.ValidationError('dtend cannot be less or equal to dtstart')
 
     def __str__(self):
-        return self.SUMMARY
+        return self.summary
