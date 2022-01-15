@@ -14,9 +14,9 @@ class EventTestCase(TestCase):
 
     def test_duration(self):
         event = Event(
-            start_time=datetime(2022, 1, 12, 9, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
-            name='Breakfast',
+            DTSTART=datetime(2022, 1, 12, 9, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
+            SUMMARY='Breakfast',
             calendar=self.CAL,
         )
 
@@ -25,23 +25,23 @@ class EventTestCase(TestCase):
     
     # ordering tests
 
-    # E1 = E.start_time
-    # E2 = E.end_time
-    # F1 = F.start_time
-    # F2 = F.end_time
+    # E1 = E.DTSTART
+    # E2 = E.DTEND
+    # F1 = F.DTSTART
+    # F2 = F.DTEND
 
     def test__E1_E2_F1_f2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -53,16 +53,16 @@ class EventTestCase(TestCase):
 
     def test__E1_E2F1_F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -74,16 +74,16 @@ class EventTestCase(TestCase):
 
     def test__E1_F1_E2_F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -95,16 +95,16 @@ class EventTestCase(TestCase):
 
     def test__E1_F1_E2F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -116,16 +116,16 @@ class EventTestCase(TestCase):
 
     def test__E1F1_E2_F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -141,16 +141,16 @@ class EventTestCase(TestCase):
 
     def test__F1_E1_E2_F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -162,16 +162,16 @@ class EventTestCase(TestCase):
 
     def test__F1_E1_E2F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 21, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 21, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -183,16 +183,16 @@ class EventTestCase(TestCase):
 
     def test__F1E1_E2_F2(self):
         E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
-            name='Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
+            SUMMARY='Dinner',
             calendar=self.CAL,
         )
 
         F = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
-            end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner',
+            DTSTART=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
+            DTEND = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
+            SUMMARY='Second Dinner',
             calendar=self.CAL,
         )
 
@@ -202,142 +202,174 @@ class EventTestCase(TestCase):
 
         events.delete()
 
+
+class EventManagerTestCase(TestCase):
+    def setUp(self):
+        self.CAL = Calendar.objects.create(name='dummy')
+
+    def test_create_raises_validation_error_T2_T1(self):
+        DTSTART = datetime(2022, 1, 15, 16, 6, tzinfo=UTC)
+        DTEND = datetime(2022, 1, 15, 16, 5, tzinfo=UTC)
+        with self.assertRaises(ValueError):
+            Event.objects.create(
+                DTSTART=DTSTART,
+                DTEND=DTEND,
+                SUMMARY='dummy',
+                calendar=self.CAL,
+            )
+
+            Event.objects.delete()
+
+    def test_create_raises_validation_error_T1T2(self):
+        DTSTART = datetime(2022, 1, 15, 16, 6, tzinfo=UTC)
+        DTEND = datetime(2022, 1, 15, 16, 6, tzinfo=UTC)
+        with self.assertRaises(ValueError):
+            Event.objects.create(
+                DTSTART=DTSTART,
+                DTEND=DTEND,
+                SUMMARY='dummy',
+                cal=self.CAL,
+            )
+
+            Event.objects.delete()
+
+
 class EventManagerIntervalTestCase(TestCase):
     def setUp(self):
         self.CAL = Calendar.objects.create(name='dummy')
 
         self.E = Event.objects.create(
-            start_time=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
-            end_time=datetime(2022, 1, 12, 11, 0, tzinfo=UTC),
-            name='Second Breakfast',
+            DTSTART=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
+            DTEND=datetime(2022, 1, 12, 11, 0, tzinfo=UTC),
+            SUMMARY='Second Breakfast',
             calendar=self.CAL,
         )
 
-    # A = start_time
-    # B = end_time
-    # E1 = E.start_time
-    # E2 = E.end_time
+    # A = DTSTART
+    # B = DTEND
+    # E1 = E.DTSTART
+    # E2 = E.DTEND
 
 
-    # tests with start_time and end_timed
+    # tests with DTSTART and DTENDd
     def test__A_B_E1_E2(self):
-        start_time = self.E.start_time - 2 * self.E.duration()
-        end_time = self.E.start_time - self.E.duration()
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART - 2 * self.E.duration()
+        DTEND = self.E.DTSTART - self.E.duration()
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 0)
 
     def test__A_BE1_E2(self):
-        start_time = self.E.start_time - self.E.duration()
-        end_time = self.E.start_time
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART - self.E.duration()
+        DTEND = self.E.DTSTART
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 0)
 
     def test__A_E1_B_E2(self):
-        start_time = self.E.start_time - self.E.duration()
-        end_time = self.E.start_time + self.E.duration() / 2.0
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART - self.E.duration()
+        DTEND = self.E.DTSTART + self.E.duration() / 2.0
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
     
     def test__A_E1_E2_B(self):
-        start_time = self.E.start_time - self.E.duration()
-        end_time = self.E.end_time + self.E.duration()
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART - self.E.duration()
+        DTEND = self.E.DTEND + self.E.duration()
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
 
     def test__A_E1_E2B(self):
-        start_time = self.E.start_time - self.E.duration()
-        end_time = self.E.end_time
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART - self.E.duration()
+        DTEND = self.E.DTEND
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
 
     def test__AE1_B_E2(self):
-        start_time = self.E.start_time
-        end_time = self.E.start_time + self.E.duration() / 2.0
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART
+        DTEND = self.E.DTSTART + self.E.duration() / 2.0
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
 
     def test__AE1_E2B(self):
-        start_time = self.E.start_time
-        end_time = self.E.end_time
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART
+        DTEND = self.E.DTEND
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
 
     def test__E1_A_B_E2(self):
-        start_time = self.E.start_time + self.E.duration() / 3
-        end_time = self.E.end_time - self.E.duration() / 3
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART + self.E.duration() / 3
+        DTEND = self.E.DTEND - self.E.duration() / 3
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
 
     def test__E1_A_E2B(self):
-        start_time = self.E.start_time + self.E.duration() / 2
-        end_time = self.E.end_time
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTSTART + self.E.duration() / 2
+        DTEND = self.E.DTEND
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 1)
 
     def test__E1_E2_A_B(self):
-        start_time = self.E.end_time + self.E.duration()
-        end_time = self.E.end_time + 2 * self.E.duration()
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTEND + self.E.duration()
+        DTEND = self.E.DTEND + 2 * self.E.duration()
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 0)
 
     def test__E1_E2A_B(self):
-        start_time = self.E.end_time
-        end_time = self.E.end_time + self.E.duration()
-        events = Event.objects.interval(start_time, end_time)
+        DTSTART = self.E.DTEND
+        DTEND = self.E.DTEND + self.E.duration()
+        events = Event.objects.interval(DTSTART, DTEND)
         self.assertEquals(len(events), 0)
 
 
-    # tests with start_time only
+    # tests with DTSTART only
     def test__A_E1_E2(self):
-        start_time = self.E.start_time - self.E.duration()
-        events = Event.objects.interval(start_time=start_time)
+        DTSTART = self.E.DTSTART - self.E.duration()
+        events = Event.objects.interval(DTSTART=DTSTART)
         self.assertEquals(len(events), 1)
 
     def test__AE1_E2(self):
-        start_time = self.E.start_time
-        events = Event.objects.interval(start_time=start_time)
+        DTSTART = self.E.DTSTART
+        events = Event.objects.interval(DTSTART=DTSTART)
         self.assertEquals(len(events), 1)
 
     def test__E1_A_E2(self):
-        start_time = self.E.start_time + self.E.duration() / 2 
-        events = Event.objects.interval(start_time=start_time)
+        DTSTART = self.E.DTSTART + self.E.duration() / 2 
+        events = Event.objects.interval(DTSTART=DTSTART)
         self.assertEquals(len(events), 1)
 
     def test__E1_E2A(self):
-        start_time = self.E.end_time
-        events = Event.objects.interval(start_time=start_time)
+        DTSTART = self.E.DTEND
+        events = Event.objects.interval(DTSTART=DTSTART)
         self.assertEquals(len(events), 0)
 
     def test__E1_E2_A(self):
-        start_time = self.E.end_time + self.E.duration()
-        events = Event.objects.interval(start_time=start_time)
+        DTSTART = self.E.DTEND + self.E.duration()
+        events = Event.objects.interval(DTSTART=DTSTART)
         self.assertEquals(len(events), 0)
 
 
-    # tests with end_time only
+    # tests with DTEND only
     def test__B_E1_E2(self):
-        end_time = self.E.start_time - self.E.duration()
-        events = Event.objects.interval(end_time=end_time)
+        DTEND = self.E.DTSTART - self.E.duration()
+        events = Event.objects.interval(DTEND=DTEND)
         self.assertEquals(len(events), 0)
 
     def test__BE1_E2(self):
-        end_time = self.E.start_time
-        events = Event.objects.interval(end_time=end_time)
+        DTEND = self.E.DTSTART
+        events = Event.objects.interval(DTEND=DTEND)
         self.assertEquals(len(events), 0)
 
     def test__E1_B_E2(self):
-        end_time = self.E.start_time + self.E.duration() / 2
-        events = Event.objects.interval(end_time=end_time)
+        DTEND = self.E.DTSTART + self.E.duration() / 2
+        events = Event.objects.interval(DTEND=DTEND)
         self.assertEquals(len(events), 1)
 
     def test__E1_E2B(self):
-        end_time = self.E.end_time
-        events = Event.objects.interval(end_time=end_time)
+        DTEND = self.E.DTEND
+        events = Event.objects.interval(DTEND=DTEND)
         self.assertEquals(len(events), 1)
 
     def test__E1_E2_B(self):
-        end_time = self.E.end_time + self.E.duration()
-        events = Event.objects.interval(end_time=end_time)
+        DTEND = self.E.DTEND + self.E.duration()
+        events = Event.objects.interval(DTEND=DTEND)
         self.assertEquals(len(events), 1)
 
 
@@ -349,13 +381,13 @@ class EventManagerIntervalTestCase(TestCase):
 
     # ValueError exception tests
     def test__AB(self):
-        start_time = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
-        end_time = start_time = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
+        DTSTART = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
+        DTEND = DTSTART = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
         with self.assertRaises(ValueError):
-            events = Event.objects.interval(start_time, end_time)
+            events = Event.objects.interval(DTSTART, DTEND)
 
     def test__B_A(self):
-        start_time = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
-        end_time = datetime(2022, 1, 12, 9, 0, tzinfo=UTC)
+        DTSTART = datetime(2022, 1, 12, 10, 0, tzinfo=UTC)
+        DTEND = datetime(2022, 1, 12, 9, 0, tzinfo=UTC)
         with self.assertRaises(ValueError):
-            events = Event.objects.interval(start_time, end_time)
+            events = Event.objects.interval(DTSTART, DTEND)
