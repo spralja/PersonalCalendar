@@ -77,6 +77,7 @@ class Event(models.Model):
     related_to = models.TextField(null=True)
     uri = models.URLField(null=True, max_length=2048)
     last_modified = models.DateTimeField(null=True)
+    created = models.DateTimeField(null=True)
 
     objects = EventManager()
 
