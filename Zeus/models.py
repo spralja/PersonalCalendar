@@ -59,7 +59,6 @@ class EventManager(models.Manager):
     def create_from_ical_event(self, calendar, ical_event):
         ical_event_dict = self._add_from_ical_event_to_ical_event_dict(ical_event)
 
-
         return self.create(calendar=calendar, **ical_event_dict)
 
 
