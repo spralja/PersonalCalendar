@@ -75,6 +75,7 @@ class Event(models.Model):
     location = models.TextField(null=True)
     contact = models.TextField(null=True)
     related_to = models.TextField(null=True)
+    uri = models.URLField(null=True, max_length=2048)
 
     objects = EventManager()
 
