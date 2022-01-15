@@ -78,6 +78,7 @@ class Event(models.Model):
     uri = models.URLField(null=True, max_length=2048)
     last_modified = models.DateTimeField(null=True)
     created = models.DateTimeField(null=True)
+    sequence = models.IntegerField(null=True)
 
     objects = EventManager()
 
