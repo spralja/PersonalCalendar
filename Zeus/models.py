@@ -4,6 +4,13 @@ from datetime import datetime
 import icalendar
 
 
+class Calendar(models.Model):
+    name = models.CharField(max_length=24)
+    
+    def __str__(self):
+        return self.name
+
+
 class EventManager(models.Manager):
     def interval(self, start_time=None, end_time=None):
         if start_time is None and end_time is None:
@@ -21,22 +28,6 @@ class EventManager(models.Manager):
 
         return self.filter(start_time__lt=end_time) & self.filter(end_time__gt=start_time)
 
-    def from_ical(self, ical_string):
-        try:
-            pass
-        except KeyError as e:
-            raise KeyError("missing key..." + str(e))
-
-        return self.create()
-
-    def create_dummy(self, **kwargs):
-        return self.create({key: Event.Meta.dummy[key] if kwargs[key] is None else kwargs[key], for key, value in Event.Meta.dummy})
-
-class Calendar(models.Model):
-    name = models.CharField(max_length=24)
-    
-    def __str__(self):
-        return self.name
 
 class Event(models.Model):
     calendar = models.ForeignKey(to=Calendar, on_delete=models.CASCADE)
@@ -51,12 +42,6 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['start_time']
-        dummy = {
-            'calendar' = 0,
-            'start_time' = None,
-            'end_time' = None,
-            'name' = 'dummy',
-        }
 
     def clean(self):
         super().clean()
@@ -65,4 +50,3 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
-

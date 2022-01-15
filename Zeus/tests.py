@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Event, EventManager
+from .models import Calendar, Event, EventManager
 from datetime import datetime, timezone, timedelta
 import icalendar
 
@@ -9,11 +9,15 @@ UTC = timezone.utc
 
 
 class EventTestCase(TestCase):
+    def setUp(self):
+        self.CAL = Calendar.objects.create(name='dummy')
+
     def test_duration(self):
         event = Event(
             start_time=datetime(2022, 1, 12, 9, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
-            name='Breakfast'
+            name='Breakfast',
+            calendar=self.CAL,
         )
 
         self.assertEquals(event.duration(), timedelta(hours=1))
@@ -31,12 +35,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -50,12 +56,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -69,12 +77,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 23, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -88,12 +98,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 22, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -107,12 +119,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -130,12 +144,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -149,12 +165,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 19, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 21, 0, tzinfo=UTC),
-            name='Second Dinner'
+            name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -168,12 +186,14 @@ class EventTestCase(TestCase):
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 21, 0, tzinfo=UTC),
             name='Dinner',
+            calendar=self.CAL,
         )
 
         F = Event.objects.create(
             start_time=datetime(2022, 1, 12, 20, 0, tzinfo=UTC),
             end_time = datetime(2022, 1, 13, 22, 0, tzinfo=UTC),
             name='Second Dinner',
+            calendar=self.CAL,
         )
 
         events = Event.objects.all()
@@ -184,10 +204,13 @@ class EventTestCase(TestCase):
 
 class EventManagerIntervalTestCase(TestCase):
     def setUp(self):
+        self.CAL = Calendar.objects.create(name='dummy')
+
         self.E = Event.objects.create(
             start_time=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),
             end_time=datetime(2022, 1, 12, 11, 0, tzinfo=UTC),
             name='Second Breakfast',
+            calendar=self.CAL,
         )
 
     # A = start_time
@@ -336,9 +359,3 @@ class EventManagerIntervalTestCase(TestCase):
         end_time = datetime(2022, 1, 12, 9, 0, tzinfo=UTC)
         with self.assertRaises(ValueError):
             events = Event.objects.interval(start_time, end_time)
-
-class EventManagerFromIcalendarCalEventTestCase(TestCase):
-    def test_throws_key_error(self):
-        event = icalendar.cal.Event()
-        with self.assertRaises(KeyError):
-            Event.objects.from_icalendar_cal_Event(event)
