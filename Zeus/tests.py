@@ -2,6 +2,7 @@ from django.test import TestCase
 from .models import Calendar, Event, EventManager
 from datetime import datetime, timezone, timedelta
 import icalendar
+from decouple import config
 
 
 UTC = timezone.utc
@@ -9,12 +10,11 @@ DTSTAMP = datetime.now(tz=UTC)
 
 
 class CalendarManagerTestCase(TestCase):
-    def test_create_from_ical_element(self):
-        ical_file = open('test/cal.ics', 'rb')
-        ical_cal = icalendar.Calendar.from_ical(ical_file.read())
+    def test_create_from_ical(self):
+        ical_file = open('Zeus/test_files/test_create_from_ical.ics')
+        calendar = Calendar.objects.create_from_ical(ical_file.read(), name='test')
         ical_file.close()
 
-        cal = Calendar.objects.create_from_ical_element(ical_cal)
 
 class EventTestCase(TestCase):
     def setUp(self):

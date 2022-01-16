@@ -41,11 +41,21 @@ class ICalendarElementManager(models.Manager):
 
         return element_dict
 
+
 class CalendarManager(ICalendarElementManager):
-    pass
+    def create_from_ical(self, ical, **kwargs):
+        ical_cal = icalendar.Calendar.from_ical(ical)
+        calendar = self.create_from_ical_element(ical_cal, ical=ical,**kwargs)
+
+        for subcomponent in ical_cal.subcomponents:
+            Event.objects.create_from_ical_element(subcomponent, calendar=calendar)
+
+        return calendar
+
 
 class Calendar(models.Model):
     name = models.TextField()
+    ical = models.TextField()
 
     prodid = models.TextField(primary_key=True, default=generate_uid.__call__)
 
@@ -91,6 +101,13 @@ class Geo(models.Model):
     def __str__(self):
         return "%f;%f" % (self.longitude, self.latitude)
 
+class Category:
+    pass
+
+class ICalendarSubcomponent(modles.Model):
+
+    class Meta:
+        abstract = 'True'
 
 class Event(models.Model):
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, null=True)
@@ -108,6 +125,7 @@ class Event(models.Model):
     priority = models.IntegerField(null=True)
     resources = models.TextField(null=True)
     status = models.TextField(null=True)
+
     contact = models.TextField(null=True)
     related_to = models.TextField(null=True)
     uri = models.URLField(null=True, max_length=2048)
