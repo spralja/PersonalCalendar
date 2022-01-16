@@ -105,6 +105,8 @@ class Event(models.Model):
     description = models.TextField(null=True)
     geo = models.ForeignKey(Geo, on_delete=models.RESTRICT, null=True)
     location = models.TextField(null=True)
+    priority = models.IntegerField(null=True)
+    resources = models.TextField(null=True)
     contact = models.TextField(null=True)
     related_to = models.TextField(null=True)
     uri = models.URLField(null=True, max_length=2048)
