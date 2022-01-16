@@ -13,7 +13,6 @@ class generate_uid:
     def __call__():
         return generate_uid.UID_GENERATOR.uid(config('DOMAIN_NAME'))
 
-
 class ICalendarElementManager(models.Manager):
     def create_from_ical_element(self, ical_element, **kwargs):
         element_dict = self._convert_properties(ical_element)
@@ -27,9 +26,16 @@ class ICalendarElementManager(models.Manager):
         fields = [field.name for field in self.model._meta.get_fields()]
         for field in fields:
             ical_property = field.replace('_', '-')
+            if ical_property[0] == '-':
+                ical_property = ical_property[1:]
+
             if ical_element.get(ical_property) is not None:
                 if type(ical_element[ical_property]) is icalendar.prop.vDDDTypes:
                     element_dict[field] = ical_element[ical_property].dt
+                elif type(ical_element[ical_property]) is icalendar.prop.vGeo:
+                    geo_dict = vars(ical_element[ical_property])
+                    geo_dict.pop('params')
+                    element_dict[field] = Geo.objects.create(**geo_dict)
                 else:
                     element_dict[field] = ical_element[ical_property]
 
@@ -78,6 +84,14 @@ class EventManager(ICalendarElementManager):
         return self.filter(dtstart__lt=dtend) & self.filter(dtend__gt=dtstart)
 
 
+class Geo(models.Model):
+    longitude = models.IntegerField()
+    latitude = models.IntegerField()
+
+    def __str__(self):
+        return "%f;%f" % (self.longitude, self.latitude)
+
+
 class Event(models.Model):
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, null=True)
 
@@ -87,7 +101,9 @@ class Event(models.Model):
     summary = models.TextField()
     dtstamp = models.DateTimeField()
 
+    _class = models.TextField(null=True)
     description = models.TextField(null=True)
+    geo = models.ForeignKey(Geo, on_delete=models.RESTRICT, null=True)
     location = models.TextField(null=True)
     contact = models.TextField(null=True)
     related_to = models.TextField(null=True)
@@ -103,11 +119,6 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['dtstart']
-
-    def clean(self):
-        super().clean()
-        if self.dtend <= self.dtstart:
-            raise forms.ValidationError('dtend cannot be less or equal to dtstart')
 
     def __str__(self):
         return self.summary
