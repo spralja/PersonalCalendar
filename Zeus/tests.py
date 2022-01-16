@@ -224,7 +224,7 @@ class EventManagerTestCase(TestCase):
     def setUp(self):
         self.CAL = Calendar.objects.create(name='dummy')
 
-    def test_create_raises_validation_error_T2_T1(self):
+    def test_validate_raises_validation_error_T2_T1(self):
         dtstart = datetime(2022, 1, 15, 16, 6, tzinfo=UTC)
         dtend = datetime(2022, 1, 15, 16, 5, tzinfo=UTC)
         with self.assertRaises(ValueError):
@@ -252,14 +252,14 @@ class EventManagerTestCase(TestCase):
 
             Event.objects.delete()
 
-    def test_create_from_ical_event(self):
+    def test_create_from_ical_element(self):
         ical_file = open('test/cal.ics', 'rb')
         ical_cal = icalendar.Calendar.from_ical(ical_file.read())
         ical_file.close()
 
         ical_event = ical_cal.subcomponents[1]
         
-        E = Event.objects.create_from_ical_event(self.CAL, ical_event)
+        E = Event.objects.create_from_ical_element(ical_event, calendar=self.CAL)
         self.assertEquals(E.related_to, 'test')
 
 
