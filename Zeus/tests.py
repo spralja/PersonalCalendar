@@ -8,6 +8,14 @@ UTC = timezone.utc
 DTSTAMP = datetime.now(tz=UTC)
 
 
+class CalendarManagerTestCase(TestCase):
+    def test_create_from_ical_element(self):
+        ical_file = open('test/cal.ics', 'rb')
+        ical_cal = icalendar.Calendar.from_ical(ical_file.read())
+        ical_file.close()
+
+        cal = Calendar.objects.create_from_ical_element(ical_cal)
+
 class EventTestCase(TestCase):
     def setUp(self):
         self.CAL = Calendar.objects.create(name='dummy')

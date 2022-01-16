@@ -35,8 +35,19 @@ class ICalendarElementManager(models.Manager):
 
         return element_dict
 
+class CalendarManager(ICalendarElementManager):
+    pass
+
 class Calendar(models.Model):
-    name = models.CharField(max_length=24)
+    name = models.TextField()
+
+    prodid = models.TextField(primary_key=True, default=generate_uid.__call__)
+
+    calscale = models.TextField(default='GREGORIAN')
+    method = models.TextField(null=True)
+    version = models.TextField(null=True)
+
+    objects = CalendarManager()
     
     def __str__(self):
         return self.name
@@ -68,7 +79,7 @@ class EventManager(ICalendarElementManager):
 
 
 class Event(models.Model):
-    calendar = models.ForeignKey(to=Calendar, on_delete=models.CASCADE)
+    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, null=True)
 
     uid = models.TextField(default=generate_uid.__call__, primary_key=True)
     dtstart = models.DateTimeField()
