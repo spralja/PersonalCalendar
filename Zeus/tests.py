@@ -11,14 +11,21 @@ DTSTAMP = datetime.now(tz=UTC)
 
 class CalendarManagerTestCase(TestCase):
     def test_create_from_ical(self):
-        ical_file = open('Zeus/test_files/test_create_from_ical.ics')
-        calendar = Calendar.objects.create_from_ical(ical_file.read(), name='test')
+        ical_file = open('Zeus/test_files/cal.ics')
+        calendar = Calendar.objects.create_from_ical(ical_file.read(), name='name')
         ical_file.close()
+
+        self.assertEquals(calendar.prodid, '20220116T200431-o1SwAE2uqx0qGH5k@PersonalCalendar.spralja.test')
+
+        event = Event.objects.filter(calendar=calendar)[0]
+
+        self.assertEquals(event.uid, '20220116T201956-FEYUe0Q8cXybTA8k@PersonalCalendar.spralja.test')
+        self.assertEquals(event.summary, 'TEST_SUMMARY')
 
 
 class EventTestCase(TestCase):
     def setUp(self):
-        self.CAL = Calendar.objects.create(name='dummy')
+        self.CAL = Calendar.objects.create()
 
     def test_duration(self):
         event = Event(
@@ -230,9 +237,9 @@ class EventTestCase(TestCase):
 
 class EventManagerTestCase(TestCase):
     def setUp(self):
-        self.CAL = Calendar.objects.create(name='dummy')
+        self.CAL = Calendar.objects.create()
 
-    def test_validate_raises_validation_error_T2_T1(self):
+    def test_create_raises_validation_error_T2_T1(self):
         dtstart = datetime(2022, 1, 15, 16, 6, tzinfo=UTC)
         dtend = datetime(2022, 1, 15, 16, 5, tzinfo=UTC)
         with self.assertRaises(ValueError):
@@ -260,20 +267,10 @@ class EventManagerTestCase(TestCase):
 
             Event.objects.delete()
 
-    def test_create_from_ical_element(self):
-        ical_file = open('test/cal.ics', 'rb')
-        ical_cal = icalendar.Calendar.from_ical(ical_file.read())
-        ical_file.close()
-
-        ical_event = ical_cal.subcomponents[1]
-        
-        E = Event.objects.create_from_ical_element(ical_event, calendar=self.CAL)
-        self.assertEquals(E.related_to, 'test')
-
 
 class EventManagerIntervalTestCase(TestCase):
     def setUp(self):
-        self.CAL = Calendar.objects.create(name='dummy')
+        self.CAL = Calendar.objects.create()
 
         self.E = Event.objects.create(
             dtstart=datetime(2022, 1, 12, 10, 0, tzinfo=UTC),

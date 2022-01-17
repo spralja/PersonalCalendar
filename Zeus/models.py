@@ -45,23 +45,20 @@ class ICalendarElementManager(models.Manager):
 class CalendarManager(ICalendarElementManager):
     def create_from_ical(self, ical, **kwargs):
         ical_cal = icalendar.Calendar.from_ical(ical)
-        calendar = self.create_from_ical_element(ical_cal, ical=ical,**kwargs)
+        calendar = self.create_from_ical_element(ical_cal, ical=ical, **kwargs)
 
         for subcomponent in ical_cal.subcomponents:
-            Event.objects.create_from_ical_element(subcomponent, calendar=calendar)
+            if type(subcomponent) is icalendar.cal.Event:
+                Event.objects.create_from_ical_element(subcomponent, calendar=calendar)
 
         return calendar
 
 
 class Calendar(models.Model):
-    name = models.TextField()
+    name = models.TextField(blank=False, null=False)
     ical = models.TextField()
 
     prodid = models.TextField(primary_key=True, default=generate_uid.__call__)
-
-    calscale = models.TextField(default='GREGORIAN')
-    method = models.TextField(null=True)
-    version = models.TextField(null=True)
 
     objects = CalendarManager()
     
@@ -94,21 +91,6 @@ class EventManager(ICalendarElementManager):
         return self.filter(dtstart__lt=dtend) & self.filter(dtend__gt=dtstart)
 
 
-class Geo(models.Model):
-    longitude = models.IntegerField()
-    latitude = models.IntegerField()
-
-    def __str__(self):
-        return "%f;%f" % (self.longitude, self.latitude)
-
-class Category:
-    pass
-
-class ICalendarSubcomponent(modles.Model):
-
-    class Meta:
-        abstract = 'True'
-
 class Event(models.Model):
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, null=True)
 
@@ -117,21 +99,6 @@ class Event(models.Model):
     dtend = models.DateTimeField()
     summary = models.TextField()
     dtstamp = models.DateTimeField()
-
-    _class = models.TextField(null=True)
-    description = models.TextField(null=True)
-    geo = models.ForeignKey(Geo, on_delete=models.RESTRICT, null=True)
-    location = models.TextField(null=True)
-    priority = models.IntegerField(null=True)
-    resources = models.TextField(null=True)
-    status = models.TextField(null=True)
-
-    contact = models.TextField(null=True)
-    related_to = models.TextField(null=True)
-    uri = models.URLField(null=True, max_length=2048)
-    last_modified = models.DateTimeField(null=True)
-    created = models.DateTimeField(null=True)
-    sequence = models.IntegerField(null=True)
 
     objects = EventManager()
 
