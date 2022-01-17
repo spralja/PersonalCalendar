@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Calendar, Event, EventManager
+from .models import Calendar, Event, EventManager, PropertyField, Conformance
 from datetime import datetime, timezone, timedelta
 import icalendar
 from decouple import config
@@ -21,6 +21,9 @@ class CalendarManagerTestCase(TestCase):
 
         self.assertEquals(event.uid, '20220116T201956-FEYUe0Q8cXybTA8k@PersonalCalendar.spralja.test')
         self.assertEquals(event.summary, 'TEST_SUMMARY')
+        self.assertEquals(event.dtstart, datetime(2022, 1, 16, 19, tzinfo=UTC))
+        self.assertEquals(event.dtend, datetime(2022, 1, 16, 20, tzinfo=UTC))
+        self.assertEquals(event.dtstamp, datetime(2022, 1, 16, 18, 22, 33, tzinfo=UTC))
 
 
 class EventTestCase(TestCase):
@@ -426,3 +429,22 @@ class EventManagerIntervalTestCase(TestCase):
         dtend = datetime(2022, 1, 12, 9, 0, tzinfo=UTC)
         with self.assertRaises(ValueError):
             events = Event.objects.interval(dtstart, dtend)
+
+
+class PropertyTestCase(TestCase):
+    def test_conformance_is_not_conformance(self):
+        with self.assertRaises(TypeError):
+            PropertyField(conformance=1)
+
+    def test_conformance_is_CAN_BE_SPECIFIED_but_primary_key_is_True(self):
+        with self.assertRaises(TypeError):
+            PropertyField(conformance=Conformance.CAN_BE_SPECIFIED, primary_key=True)
+
+    def test_conformance_is_CAN_BE_SPECIFIED_but_null_is_not_False(self):
+        with self.assertRaises(TypeError):
+            PropertyField(conformance=Conformance.CAN_BE_SPECIFIED, null=False)
+
+    def test_conformance_is_MUST_BE_SPECIFIED_but_null_is_True(self):
+        with self.assertRaises(TypeError):
+            PropertyField(conformance=Conformance.MUST_BE_SPECIFIED, null=True)
+        

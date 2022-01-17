@@ -4,14 +4,94 @@ from datetime import datetime
 import icalendar
 from icalendar.tools import UIDGenerator
 from decouple import config
+from enum import Enum
+
+class Conformance(Enum):
+    CAN_BE_SPECIFIED = 0
+    MUST_BE_SPECIFIED = 1
+    CAN_BE_SPECIFIED_MULTIPLE_TIMES = 2
+
+class PropertyClass:
+    _value_data_type_switch = {
+        'BINARY': NotImplementedError(),
+        'BOOLEAN': models.BooleanField,
+        'CAL-ADDRESS': NotImplementedError(),
+        'DATE': NotImplementedError(),
+        'DATE-TIME': models.DateTimeField,
+        'DURATION': NotImplementedError(),
+        'FLOAT': models.FloatField,
+        'INTEGER': models.IntegerField,
+        'PERIOD': NotImplementedError(),
+        'RECUR': NotImplementedError(),
+        'TEXT': models.TextField,
+        'TIME': NotImplementedError(),
+        'URI': NotImplementedError(),
+        'UTC-OFFSET': NotImplementedError()
+    }
+
+    def __call__(self, value_data_type, conformance, shared=False, **options):
+        if type(value_data_type) is not str:
+            raise TypeError('value_data_type must be str')
+
+        value_data_type = value_data_type.upper()
+        field = None
+        if self._value_data_type_switch.get(value_data_type) is not None:
+            if type(self._value_data_type_switch[value_data_type]) is NotImplementedError:
+                raise self._value_data_type_switch[value_data_type]
+
+            field = self._value_data_type_switch[value_data_type]   
+        else:
+            raise TypeError('valu_data_type is not registerd')
+
+        if type(conformance) is not Conformance:
+            raise TypeError('conformance must be of type Conformance')
+
+        if conformance == Conformance.CAN_BE_SPECIFIED:
+            if options.get('primary_key') is not None:
+                if options['primary_key'] != False:
+                    raise TypeError('if conformance is CAN_BE_SPECIFIED, primary_key must not not be False')
+            
+            if options.get('null') is not None:
+                if options['null'] != True:
+                    raise TypeError()
+
+            options['null'] = True
+        elif conformance == Conformance.MUST_BE_SPECIFIED:
+            if options.get('null') is not None:
+                if options['null'] != False:
+                    raise TypeError()
+            
+            options['null'] = False
+        else:
+            if field is not None:
+                raise TypeError()
+            else:
+                if options.get('to') is not None:
+                    raise TypeError()
+
+                if options.get('on_delete') is None:
+                    raise TypeError()
+
+                raise NotImplementedError()
+
+            raise NotImplementedError()
+
+        if shared:
+            raise NotImplementedError()
 
 
-class generate_uid:
+        return field(**options)
+
+PropertyField = PropertyClass()
+
+class GenerateUIDClass:
     UID_GENERATOR = UIDGenerator()
 
     @staticmethod
     def __call__():
         return generate_uid.UID_GENERATOR.uid(config('DOMAIN_NAME'))
+
+generate_uid = GenerateUIDClass()
 
 class ICalendarElementManager(models.Manager):
     def create_from_ical_element(self, ical_element, **kwargs):
@@ -94,11 +174,11 @@ class EventManager(ICalendarElementManager):
 class Event(models.Model):
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, null=True)
 
-    uid = models.TextField(default=generate_uid.__call__, primary_key=True)
-    dtstart = models.DateTimeField()
-    dtend = models.DateTimeField()
-    summary = models.TextField()
-    dtstamp = models.DateTimeField()
+    uid = PropertyField('TEXT', Conformance.MUST_BE_SPECIFIED, default=generate_uid.__call__, primary_key=True)
+    dtstart = PropertyField('DATE-TIME', Conformance.MUST_BE_SPECIFIED)
+    dtend = PropertyField('DATE-TIME', Conformance.MUST_BE_SPECIFIED)
+    summary = PropertyField('TEXT', Conformance.CAN_BE_SPECIFIED)
+    dtstamp = PropertyField('DATE-TIME', Conformance.MUST_BE_SPECIFIED )
 
     objects = EventManager()
 
